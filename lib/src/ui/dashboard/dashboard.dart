@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lumi/src/constants/const.dart';
 import 'package:lumi/src/models/loginrequester.dart';
 import 'package:lumi/src/ui/login/components/rounded_button.dart';
@@ -55,6 +56,7 @@ class dashboardForm extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _scanController = new TextEditingController(text: "");
   late Future entityFuture;
+  late String deviceId;
 
   @override
   Widget build(BuildContext context) {
@@ -118,17 +120,79 @@ class dashboardForm extends StatelessWidget {
 }
 
 @override
-Future<Device?> fetchTenant(String deviceName) {
+Future<Device?> fetchDeviceType(String deviceName) async {
+  Device response;
+  Future<List<EntityGroupInfo>> deviceResponse;
   var tbClient = ThingsboardClient(serverUrl);
-  return tbClient.getDeviceService().getTenantDevice(deviceName);
+  tbClient.init();
+  response =
+      (await tbClient.getDeviceService().getTenantDevice(deviceName)) as Device;
+  if (response.label!.isNotEmpty) {
+    print("Device present, Device Type-->" + response.type);
+    if (response.type == "ilmNode") {
+      deviceResponse = fetchDeviceGroups("Device", response.type.toString());
+    }
+  } else {
+    print("Device not present,Try with another device");
+  }
+  // response.then((value) => {value!.name});
+}
+
+@override
+Future<Device?> fetchDeviceDetails(String deviceName) async {
+  Device response;
+  Future<List<EntityGroupInfo>> deviceResponse;
+  var tbClient = ThingsboardClient(serverUrl);
+  tbClient.init();
+  response =
+      (await tbClient.getDeviceService().getTenantDevice(deviceName)) as Device;
+  if (response.label!.isNotEmpty) {
+    var scannedDeviceCredentials = await tbClient
+        .getDeviceService()
+        .getDeviceCredentialsByDeviceId(response.id!.id!);
+    await tbClient.getDeviceService().deleteDevice(response.id!.id!);
+    print("Device Deleted Sucessfully");
+
+    Device device = new Device("1234567890123456", "ilmNode");
+    device.setOwnerId(EntityGroupId("326276d0-17a1-11ec-a622-c70a8200fa04"));
+    // device.name = "1234567890123456";
+    // device.label = "ilmDevice";
+    // device.type = "ilmNode";
+
+    await tbClient.getDeviceService().saveDevice(device);
+    print("Device Added Sucessfully");
+  } else {}
+  // response.then((value) => {value!.name});
+}
+
+@override
+Future<List<EntityGroupInfo>> fetchDeviceGroups(
+    String groupType, String deviceType) async {
+  List<EntityGroupInfo> response;
+  var tbClient = ThingsboardClient(serverUrl);
+  tbClient.init();
+  var groupType = "Device";
+  var entityVal = entityTypeFromString(groupType);
+  response =
+      await tbClient.getEntityGroupService().getEntityGroupsByType(entityVal);
+  for (int i = 0; i < response.length; i++) {
+    if (deviceType == "ilmNode") {
+      if (response[i].name == "forRepairILM") {
+        var tbClient = ThingsboardClient(serverUrl);
+        tbClient.init();
+        Future<Device?> entityFuture = fetchDeviceDetails("1234567890123456");
+      }
+    } else if (deviceType == "Gateway") {
+    } else {}
+  }
+  return response;
 }
 
 void deviceFetcher(BuildContext context) {
-  late Future<Device> entityFuture;
-
+  late Future<Device?> entityFuture;
   Utility.isConnected().then((value) async {
     if (value) {
-      var entityFuture = fetchTenant("00124B002262EB96");
+      entityFuture = fetchDeviceType("1234567890123456");
     }
   });
 }

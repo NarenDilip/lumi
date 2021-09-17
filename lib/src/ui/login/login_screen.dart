@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lumi/src/constants/const.dart';
 import 'package:lumi/src/models/loginrequester.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:lumi/src/tb/service/tb_secure_storage.dart';
 import 'package:lumi/src/ui/dashboard/dashboard.dart';
 import 'package:lumi/src/utils/apppreference.dart';
 import 'package:lumi/src/utils/utility.dart';
@@ -35,6 +36,7 @@ class LoginForm extends StatelessWidget {
       refreshtoken: "",
       responseCode: 0,
       email: "");
+  late final TbStorage storage;
   TextEditingController passwordController =
       new TextEditingController(text: "");
   TextEditingController _emailController = new TextEditingController(text: "");
@@ -121,14 +123,27 @@ class LoginForm extends StatelessWidget {
   }
 
   void _loginAPI(BuildContext context) {
+    storage = TbSecureStorage();
+
     Utility.isConnected().then((value) async {
       if (value) {
         Utility.progressDialog(context);
         var tbClient = ThingsboardClient(serverUrl);
+
         final response =
             await tbClient.login(LoginRequest(user.username, user.password));
         if (response.token != null) {
-          AppPreference.save("token",response.token);
+          AppPreference.save("token", response.token);
+
+          // storage.setItem("jwt_token", response.token);
+          // storage.setItem("refresh_token", response.refreshToken);
+          //
+          // var jwtToken = storage.getItem('jwt_token');
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('token', response.token);
+          prefs.setString('refreshtoken', response.refreshToken);
+
           logindata = await SharedPreferences.getInstance();
           logindata.setString('token', response.token);
           logindata.setString('refresh_token', response.refreshToken);

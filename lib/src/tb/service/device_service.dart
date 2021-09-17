@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:lumi/src/utils/utility.dart';
+
 import '../thingsboard_client_base.dart';
 import '../http/http_utils.dart';
 import '../model/model.dart';

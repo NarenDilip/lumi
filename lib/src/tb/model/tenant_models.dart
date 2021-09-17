@@ -20,7 +20,6 @@ extension TenantProfileTypeToString on TenantProfileType {
 
 abstract class TenantProfileConfiguration {
   TenantProfileConfiguration();
-
   TenantProfileType getType();
 
   factory TenantProfileConfiguration.fromJson(Map<String, dynamic> json) {

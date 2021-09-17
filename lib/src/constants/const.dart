@@ -9,4 +9,5 @@ const invBorderColor = Color(0xff979797);
 const invListBackgroundColor = Color(0xff383838);
 
 const splashscreen_text = "Lumi";
-const serverUrl = "https://schnelliot.in";
+// const serverUrl = "https://schnelliot.in";
+const serverUrl = "http://iotpro.io:8077";

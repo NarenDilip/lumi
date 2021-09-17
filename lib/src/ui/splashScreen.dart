@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lumi/src/constants/const.dart';
+import 'package:lumi/src/tb/service/tb_secure_storage.dart';
 import 'package:lumi/src/ui/dashboard/dashboard.dart';
 import 'package:lumi/src/utils/apppreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../thingsboard_client.dart';
 import 'login/login_screen.dart';
 
 class splashScreen extends StatefulWidget {
@@ -17,8 +19,9 @@ class splashScreen extends StatefulWidget {
 }
 
 class splashScreenState extends State<splashScreen> {
-  late SharedPreferences logindata;
+  // late SharedPreferences logindata;
   late String token;
+  late final TbStorage storage;
 
   void initState() {
     // TODO: implement initState
@@ -27,17 +30,21 @@ class splashScreenState extends State<splashScreen> {
   }
 
   void initial() async {
-    logindata = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // var logindata=  prefs.getString("token");
+
+    // logindata = await SharedPreferences.getInstance();
+    // storage = TbSecureStorage();
     try {
-      token = logindata.getString("token")!;
+      token = prefs.getString("token").toString();
       Timer(
           Duration(seconds: 4),
           () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (BuildContext context) {
-                if (token != null) {
-                  return dashboardScreen();
-                } else {
+                if (token == "null") {
                   return LoginScreen();
+                } else {
+                  return dashboardScreen();
                 }
               })));
     } catch (e) {}
