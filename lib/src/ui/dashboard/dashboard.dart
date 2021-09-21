@@ -104,7 +104,8 @@ class dashboardForm extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 24,
-                        fontFamily: "Montserrat")),
+                        fontFamily: "Montserrat")
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -205,21 +206,21 @@ Future<Device?> fetchDeviceDetails(
       tbClient.smart_init();
       response = (await tbClient.getDeviceService().getTenantDevice(deviceName))
           as Device;
-      if (response.label!.isNotEmpty) {
+      if (response.name.isNotEmpty) {
         var scannedDeviceCredentials = await tbClient
             .getDeviceService()
             .getDeviceCredentialsByDeviceId(response.id!.id!);
         await tbClient.getDeviceService().deleteDevice(response.id!.id!);
 
-        print("Device Deleted Sucessfully");
-        fetchProductionDeviceDetails(response.name, context);
-        // fetchProdDeviceGroups("Device", response.type.toString(), context);
-      } else {}
+        fetchProductionDeviceDetails(response.name,
+            scannedDeviceCredentials!.credentialsId.toString(), context);
+      }
     } catch (e) {
       var message = toThingsboardError(e).message;
       if (message == "Session expired!") {
         var status = loginThingsboard.callThingsboardLogin(context);
         if (status == true) {
+          Utility.progressDialog(context);
           fetchDeviceDetails("1234567890123456", context);
         }
       }
@@ -229,7 +230,7 @@ Future<Device?> fetchDeviceDetails(
 
 @override
 Future<Device?> fetchProductionDeviceDetails(
-    String deviceName, BuildContext context) async {
+    String deviceName, String credentials, BuildContext context) async {
   Utility.isConnected().then((value) async {
     try {
       Device response;
@@ -239,26 +240,32 @@ Future<Device?> fetchProductionDeviceDetails(
       response = (await tbClient.getDeviceService().getTenantDevice(deviceName))
           as Device;
 
-      // var deviceCredentials = DeviceCredentials;
-      // var json;
-      //
       var getCredentials = await tbClient
           .getDeviceService()
           .getDeviceCredentialsByDeviceId(response.id!.id.toString());
 
-      getCredentials!.credentialsId = "123456ABCD";
+      getCredentials!.credentialsId = credentials;
 
-      var savedCredentilas = await tbClient
+      var savedCredentials = await tbClient
           .getDeviceService()
           .saveDeviceCredentials(getCredentials);
 
-      var details = savedCredentilas.credentialsId;
+      Navigator.pop(context);
+
+      Fluttertoast.showToast(
+          msg: "Device Updated Sucessfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     } catch (e) {
       var message = toThingsboardError(e).message;
       if (message == "Session expired!") {
         var status = loginThingsboard.callThingsboardLogin(context);
         if (status == true) {
-          fetchDeviceDetails("1234567890123456", context);
+          fetchDeviceDetails(deviceName, context);
         }
       }
     }
@@ -306,7 +313,8 @@ void deviceFetcher(BuildContext context) {
           MaterialPageRoute(builder: (BuildContext context) => QRScreen()),
           (route) => true).then((value) {
         if (value != null) {
-          // entityFuture = fetchProductionDeviceDetails("1234567890123456", context);
+          Utility.progressDialog(context);
+          entityFuture = fetchDeviceDetails(value, context);
         }
       });
     }

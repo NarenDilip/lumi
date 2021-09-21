@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lumi/src/constants/const.dart';
+import 'package:lumi/src/utils/utility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../thingsboard_client.dart';
@@ -8,6 +9,7 @@ import '../../../thingsboard_client.dart';
 class loginThingsboard {
   static Future<bool> callThingsboardLogin(BuildContext context) async {
     try {
+      Utility.progressDialog(context);
       var tbClient = ThingsboardClient(serverUrl);
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -22,6 +24,7 @@ class loginThingsboard {
         if (prodToken.token != null) {
           prefs.setString('prod_token', prodToken.token);
           prefs.setString('prod_refreshtoken', prodToken.refreshToken);
+          Navigator.pop(context);
           return true;
         }
       }
