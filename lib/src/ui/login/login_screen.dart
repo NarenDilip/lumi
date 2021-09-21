@@ -135,14 +135,23 @@ class LoginForm extends StatelessWidget {
         if (response.token != null) {
           AppPreference.save("token", response.token);
 
-          // storage.setItem("jwt_token", response.token);
-          // storage.setItem("refresh_token", response.refreshToken);
-          //
-          // var jwtToken = storage.getItem('jwt_token');
+          storage.setItem("jwt_token", response.token);
+          storage.setItem("refresh_token", response.refreshToken);
+
+          var jwtToken = storage.getItem('jwt_token');
 
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('token', response.token);
-          prefs.setString('refreshtoken', response.refreshToken);
+          prefs.setString('smart_token', response.token);
+          prefs.setString('smart_refreshtoken', response.refreshToken);
+
+          var jwtTokens = prefs.getString('smart_token');
+
+          final prodresponse = await tbClient
+              .login(LoginRequest("ramkumar@schnellenergy.com", "schnell"));
+          if (prodresponse.token != null) {
+            prefs.setString('prod_token', prodresponse.token);
+            prefs.setString('prod_refreshtoken', prodresponse.refreshToken);
+          }
 
           logindata = await SharedPreferences.getInstance();
           logindata.setString('token', response.token);

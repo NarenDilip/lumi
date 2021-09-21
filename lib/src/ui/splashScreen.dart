@@ -36,7 +36,7 @@ class splashScreenState extends State<splashScreen> {
     // logindata = await SharedPreferences.getInstance();
     // storage = TbSecureStorage();
     try {
-      token = prefs.getString("token").toString();
+      token = prefs.getString("smart_token").toString();
       Timer(
           Duration(seconds: 4),
           () => Navigator.of(context).pushReplacement(
