@@ -6,6 +6,7 @@ import 'package:lumi/src/models/loginrequester.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:lumi/src/tb/service/tb_secure_storage.dart';
 import 'package:lumi/src/ui/dashboard/dashboard.dart';
+import 'package:lumi/src/ui/login/loginThingsboard.dart';
 import 'package:lumi/src/utils/apppreference.dart';
 import 'package:lumi/src/utils/utility.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -128,37 +129,16 @@ class LoginForm extends StatelessWidget {
     Utility.isConnected().then((value) async {
       if (value) {
         Utility.progressDialog(context);
-        var tbClient = ThingsboardClient(serverUrl);
 
-        final response =
-            await tbClient.login(LoginRequest(user.username, user.password));
-        if (response.token != null) {
-          AppPreference.save("token", response.token);
-
-          storage.setItem("jwt_token", response.token);
-          storage.setItem("refresh_token", response.refreshToken);
-
-          var jwtToken = storage.getItem('jwt_token');
-
+        if ((user.username == "smartLumi@gmail.com") && (user.password == "smartLumi")) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('smart_token', response.token);
-          prefs.setString('smart_refreshtoken', response.refreshToken);
-
-          var jwtTokens = prefs.getString('smart_token');
-
-          final prodresponse = await tbClient
-              .login(LoginRequest("ramkumar@schnellenergy.com", "schnell"));
-          if (prodresponse.token != null) {
-            prefs.setString('prod_token', prodresponse.token);
-            prefs.setString('prod_refreshtoken', prodresponse.refreshToken);
+          prefs.setString('username', user.username);
+          var status = await loginThingsboard.callThingsboardLogin(context);
+          if (status == true) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) => dashboardScreen()));
           }
-
-          logindata = await SharedPreferences.getInstance();
-          logindata.setString('token', response.token);
-          logindata.setString('refresh_token', response.refreshToken);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => dashboardScreen()));
-        }
+        } else {}
       }
     });
   }

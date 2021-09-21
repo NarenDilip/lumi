@@ -32,7 +32,6 @@ class splashScreenState extends State<splashScreen> {
   void initial() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // var logindata=  prefs.getString("token");
-
     // logindata = await SharedPreferences.getInstance();
     // storage = TbSecureStorage();
     try {

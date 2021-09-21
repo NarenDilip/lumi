@@ -11,3 +11,11 @@ const invListBackgroundColor = Color(0xff383838);
 const splashscreen_text = "Lumi";
 // const serverUrl = "https://schnelliot.in";
 const serverUrl = "http://iotpro.io:8077";
+const prod_Username = "ramkumar@schnellenergy.com";
+const prod_Password = "schnell";
+const smart_Username = "iotproduction@schnellenergy.com";
+const smart_Password = "Pro\$Te321";
+const selectiondevice = "Device";
+const ilm_deviceType = "ilmNode";
+const ilm_deviceRepair = "forRepairILM";
+

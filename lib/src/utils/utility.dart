@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lumi/src/utils/responsive.dart';
 
 class Utility {
+
   static Future<bool> isConnected() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {

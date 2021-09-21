@@ -248,10 +248,6 @@ class ThingsboardClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var jwtToken =  prefs.getString("smart_token");
       var refreshToken = prefs.getString("smart_refreshtoken");
-      // var jwtToken = await _storage.getItem('jwt_token');
-      // var jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpb3Rwcm9kdWN0aW9uQHNjaG5lbGxlbmVyZ3kuY29tIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiIyYjcxNTE5MC1iNmQ4LTExZWItODMxNC1mOWE0NDcxOTZjMGEiLCJmaXJzdE5hbWUiOiJQcm9kdWN0aW9uIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJ0ZW5hbnRJZCI6IjBlYTQ2Y2EwLWI2ZDgtMTFlYi04MzE0LWY5YTQ0NzE5NmMwYSIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAiLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTYzMTg3MDQwNSwiZXhwIjoxNjMxODc5NDA1fQ.S7OTbTTQDF_ktSPQc51k4V8gLQ3HcR5KJTh3aBwadjz9zF8cRr0I74Dc5RvCcd-ihvBoiF7zFp26oHMKQJT6ig";
-      // var refreshToken = await _storage.getItem('refresh_token');
-      // var refreshToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpb3Rwcm9kdWN0aW9uQHNjaG5lbGxlbmVyZ3kuY29tIiwic2NvcGVzIjpbIlJFRlJFU0hfVE9LRU4iXSwidXNlcklkIjoiMmI3MTUxOTAtYjZkOC0xMWViLTgzMTQtZjlhNDQ3MTk2YzBhIiwiaXNQdWJsaWMiOmZhbHNlLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImp0aSI6IjQ1MWI2MzJjLTIxN2ItNDllYi04N2RiLTQ1NzM1ZTYyYmVjYyIsImlhdCI6MTYzMTg3MDQwNSwiZXhwIjoxNjMyNDc1MjA1fQ.3472IRegLEctIZDqnWdLVy6u6e_Pqe0H3000LKyULlGZ0smK7nXcu8qYpFU1G2dBG6V4ZjXgaRJ5OLlJNBuZxQ";
       if (!_isTokenValid(jwtToken)) {
         await refreshJwtToken(refreshToken: refreshToken, notify: true);
       } else {
@@ -267,10 +263,6 @@ class ThingsboardClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var jwtToken =  prefs.getString("prod_token");
       var refreshToken = prefs.getString("prod_refreshtoken");
-      // var jwtToken = await _storage.getItem('jwt_token');
-      // var jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpb3Rwcm9kdWN0aW9uQHNjaG5lbGxlbmVyZ3kuY29tIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiIyYjcxNTE5MC1iNmQ4LTExZWItODMxNC1mOWE0NDcxOTZjMGEiLCJmaXJzdE5hbWUiOiJQcm9kdWN0aW9uIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJ0ZW5hbnRJZCI6IjBlYTQ2Y2EwLWI2ZDgtMTFlYi04MzE0LWY5YTQ0NzE5NmMwYSIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAiLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTYzMTg3MDQwNSwiZXhwIjoxNjMxODc5NDA1fQ.S7OTbTTQDF_ktSPQc51k4V8gLQ3HcR5KJTh3aBwadjz9zF8cRr0I74Dc5RvCcd-ihvBoiF7zFp26oHMKQJT6ig";
-      // var refreshToken = await _storage.getItem('refresh_token');
-      // var refreshToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpb3Rwcm9kdWN0aW9uQHNjaG5lbGxlbmVyZ3kuY29tIiwic2NvcGVzIjpbIlJFRlJFU0hfVE9LRU4iXSwidXNlcklkIjoiMmI3MTUxOTAtYjZkOC0xMWViLTgzMTQtZjlhNDQ3MTk2YzBhIiwiaXNQdWJsaWMiOmZhbHNlLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImp0aSI6IjQ1MWI2MzJjLTIxN2ItNDllYi04N2RiLTQ1NzM1ZTYyYmVjYyIsImlhdCI6MTYzMTg3MDQwNSwiZXhwIjoxNjMyNDc1MjA1fQ.3472IRegLEctIZDqnWdLVy6u6e_Pqe0H3000LKyULlGZ0smK7nXcu8qYpFU1G2dBG6V4ZjXgaRJ5OLlJNBuZxQ";
       if (!_isTokenValid(jwtToken)) {
         await refreshJwtToken(refreshToken: refreshToken, notify: true);
       } else {
