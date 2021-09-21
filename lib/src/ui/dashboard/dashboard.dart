@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lumi/src/constants/const.dart';
 import 'package:lumi/src/models/loginrequester.dart';
+import 'package:lumi/src/ui/dashboard/deviceStatus.dart';
 import 'package:lumi/src/ui/login/components/rounded_button.dart';
 import 'package:lumi/src/ui/login/components/rounded_input_field.dart';
 import 'package:lumi/src/ui/login/loginThingsboard.dart';
@@ -87,8 +88,7 @@ class dashboardForm extends StatelessWidget {
                 Material(
                   child: InkWell(
                     onTap: () {
-                      // dashboardApi(context);
-                      // _scanQR();
+                      deviceFetcher(context);
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20.0),
@@ -104,22 +104,9 @@ class dashboardForm extends StatelessWidget {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 24,
-                        fontFamily: "Montserrat")
-                ),
+                        fontFamily: "Montserrat")),
                 SizedBox(
                   height: 20,
-                ),
-                Text("",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontFamily: "Montserrat")),
-                RoundedButton(
-                  text: "Proceed",
-                  press: () {
-                    deviceFetcher(context);
-                  },
-                  key: null,
                 ),
               ],
             )));
@@ -139,8 +126,8 @@ Future<Device?> fetchDeviceType(String deviceName, BuildContext context) async {
       if (response.label!.isNotEmpty) {
         print("Device present, Device Type-->" + response.type);
         if (response.type == "ilmNode") {
-          deviceResponse =
-              fetchDeviceGroups("Device", response.type.toString(), context);
+          deviceResponse = fetchDeviceGroups(
+              "Device", deviceName, response.type.toString(), context);
         } else if (response.type == "") {
         } else {}
       } else {
@@ -151,7 +138,7 @@ Future<Device?> fetchDeviceType(String deviceName, BuildContext context) async {
       if (message == "Session expired!") {
         var status = loginThingsboard.callThingsboardLogin(context);
         if (status == true) {
-          fetchDeviceType("1234567890123456", context);
+          fetchDeviceType(deviceName, context);
         }
       }
     }
@@ -159,8 +146,8 @@ Future<Device?> fetchDeviceType(String deviceName, BuildContext context) async {
 }
 
 @override
-Future<List<EntityGroupInfo>> fetchDeviceGroups(
-    String groupType, String deviceType, BuildContext context) async {
+Future<List<EntityGroupInfo>> fetchDeviceGroups(String groupType,
+    String deviceName, String deviceType, BuildContext context) async {
   List<EntityGroupInfo> response;
   response = null as List<EntityGroupInfo>;
   Utility.isConnected().then((value) async {
@@ -178,7 +165,7 @@ Future<List<EntityGroupInfo>> fetchDeviceGroups(
             var tbClient = ThingsboardClient(serverUrl);
             tbClient.smart_init();
             Future<Device?> entityFuture =
-                fetchDeviceDetails("1234567890123456", context);
+                fetchDeviceDetails(deviceName, context);
           }
         }
       }
@@ -187,7 +174,7 @@ Future<List<EntityGroupInfo>> fetchDeviceGroups(
       if (message == "Session expired!") {
         var status = loginThingsboard.callThingsboardLogin(context);
         if (status == true) {
-          fetchDeviceType("1234567890123456", context);
+          fetchDeviceType(deviceName, context);
         }
       }
     }
@@ -214,6 +201,15 @@ Future<Device?> fetchDeviceDetails(
 
         fetchProductionDeviceDetails(response.name,
             scannedDeviceCredentials!.credentialsId.toString(), context);
+      } else {
+        Fluttertoast.showToast(
+            msg: "Device Not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.blue,
+            fontSize: 16.0);
       }
     } catch (e) {
       var message = toThingsboardError(e).message;
@@ -221,8 +217,18 @@ Future<Device?> fetchDeviceDetails(
         var status = loginThingsboard.callThingsboardLogin(context);
         if (status == true) {
           Utility.progressDialog(context);
-          fetchDeviceDetails("1234567890123456", context);
+          fetchDeviceDetails(deviceName, context);
         }
+      } else {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+            msg: "Device Not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.blue,
+            fontSize: 16.0);
       }
     }
   });
@@ -257,9 +263,14 @@ Future<Device?> fetchProductionDeviceDetails(
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
+          backgroundColor: Colors.white,
+          textColor: Colors.blue,
           fontSize: 16.0);
+
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
+        return deviceStatus();
+      }));
     } catch (e) {
       var message = toThingsboardError(e).message;
       if (message == "Session expired!") {
@@ -273,8 +284,8 @@ Future<Device?> fetchProductionDeviceDetails(
 }
 
 @override
-Future<List<EntityGroupInfo>> fetchProdDeviceGroups(
-    String s, String deviceType, BuildContext context) async {
+Future<List<EntityGroupInfo>> fetchProdDeviceGroups(String s, String deviceName,
+    String deviceType, BuildContext context) async {
   List<EntityGroupInfo> response;
   response = null as List<EntityGroupInfo>;
   Utility.isConnected().then((value) async {
@@ -296,9 +307,9 @@ Future<List<EntityGroupInfo>> fetchProdDeviceGroups(
       if (message == "Session expired!") {
         var status = loginThingsboard.callThingsboardLogin(context);
         if (status == true) {
-          fetchDeviceType("1234567890123456", context);
+          fetchDeviceType(deviceName, context);
         }
-      }
+      } else {}
     }
   });
   return response;
