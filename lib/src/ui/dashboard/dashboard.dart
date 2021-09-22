@@ -197,10 +197,12 @@ Future<Device?> fetchDeviceDetails(
         var scannedDeviceCredentials = await tbClient
             .getDeviceService()
             .getDeviceCredentialsByDeviceId(response.id!.id!);
-        await tbClient.getDeviceService().deleteDevice(response.id!.id!);
 
-        fetchProductionDeviceDetails(response.name,
-            scannedDeviceCredentials!.credentialsId.toString(), context);
+        fetchProductionDeviceDetails(
+            response.name,
+            scannedDeviceCredentials!.credentialsId.toString(),
+            response.id!.id!.toString(),
+            context);
       } else {
         Fluttertoast.showToast(
             msg: "Device Not Found",
@@ -235,8 +237,8 @@ Future<Device?> fetchDeviceDetails(
 }
 
 @override
-Future<Device?> fetchProductionDeviceDetails(
-    String deviceName, String credentials, BuildContext context) async {
+Future<Device?> fetchProductionDeviceDetails(String deviceName,
+    String credentials, String deviceid, BuildContext context) async {
   Utility.isConnected().then((value) async {
     try {
       Device response;
@@ -255,6 +257,10 @@ Future<Device?> fetchProductionDeviceDetails(
       var savedCredentials = await tbClient
           .getDeviceService()
           .saveDeviceCredentials(getCredentials);
+
+      var tbClient1 = ThingsboardClient(serverUrl);
+      tbClient1.smart_init();
+      await tbClient.getDeviceService().deleteDevice(deviceid);
 
       Navigator.pop(context);
 
@@ -278,6 +284,16 @@ Future<Device?> fetchProductionDeviceDetails(
         if (status == true) {
           fetchDeviceDetails(deviceName, context);
         }
+      } else {
+        Navigator.pop(context);
+        Fluttertoast.showToast(
+            msg: "Device Not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.blue,
+            fontSize: 16.0);
       }
     }
   });
