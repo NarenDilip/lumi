@@ -54,32 +54,25 @@ class LoginForm extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 10),
                   Image(
                       image: AssetImage("assets/icons/logo.png"),
                       height: 75,
                       width: 75),
                   SizedBox(height: 20),
-                  Column(
-                    children: <Widget>[
-                      SizedBox(
-                        width: double.infinity,
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(30, 0, 0, 15),
-                          child: Text(
-                            "User Login",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Montserrat",
-                                height: 1,
-                                color: Colors.black),
-                          ),
-                        ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Container(
+                      child: Text(
+                        "LOG IN",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
-                    ],
+                    ),
                   ),
+                  SizedBox(height: 20),
                   RoundedInputField(
                     hintText: "User Email",
                     isObscure: false,
@@ -94,7 +87,7 @@ class LoginForm extends StatelessWidget {
                     onSaved: (email) => user.username = email!,
                     onChanged: (String value) {},
                   ),
-                  SizedBox(height: size.height * 0.01),
+                  SizedBox(height: size.height * 0.02),
                   RoundedInputField(
                     hintText: "Password",
                     isObscure: true,
@@ -107,8 +100,10 @@ class LoginForm extends StatelessWidget {
                     },
                     onChanged: (value) {},
                   ),
+                  SizedBox(height: 20),
                   RoundedButton(
-                    text: "Login",
+                    text: sign_in,
+                    color: purpleColor,
                     press: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();

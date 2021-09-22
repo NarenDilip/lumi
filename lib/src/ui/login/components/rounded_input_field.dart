@@ -27,9 +27,9 @@ class RoundedInputField extends StatelessWidget {
         width: size.width * Utility.getResponsiveWidth(context),
         child: TextFormField(
           style: TextStyle(
-              fontSize: 20.0,
+              fontSize: 16.0,
               fontFamily: "Montserrat",
-              height: 1,
+              height: 0.5,
               color: Colors.black),
           validator: validator,
           onSaved: onSaved,
@@ -42,12 +42,18 @@ class RoundedInputField extends StatelessWidget {
             fillColor: Colors.white,
             errorStyle: TextStyle(fontSize: 18),
             filled: true,
-            border: OutlineInputBorder(
-                // width: 0.0 produces a thin "hairline" border
-                borderRadius: BorderRadius.all(Radius.circular(70.0)),
-                borderSide: BorderSide(color: Colors.white)
-                //borderSide: const BorderSide(),
-                ),
+            focusedBorder: OutlineInputBorder(
+              // width: 0.0 produces a thin "hairline" border
+              borderRadius: BorderRadius.all(Radius.circular(70.0)),
+              borderSide: BorderSide(color: borderColor),
+              //borderSide: const BorderSide(),
+            ),
+            enabledBorder: OutlineInputBorder(
+              // width: 0.0 produces a thin "hairline" border
+              borderRadius: BorderRadius.all(Radius.circular(70.0)),
+              borderSide: BorderSide(color: borderColor),
+              //borderSide: const BorderSide(),
+            ),
           ),
         ));
   }
