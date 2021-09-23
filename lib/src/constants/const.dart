@@ -10,7 +10,7 @@ const invListBackgroundColor = Color(0xff383838);
 const purpleColor = Color(0xff693e9e);
 const borderColor = Color(0xffd5d5d5);
 const dashboardThemeColor = Color(0xffc2cbf7);
-
+//
 
 const splashscreen_text = "Lumi";
 // const serverUrl = "https://schnelliot.in";
