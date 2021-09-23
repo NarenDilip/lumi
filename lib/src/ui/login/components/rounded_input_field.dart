@@ -29,7 +29,7 @@ class RoundedInputField extends StatelessWidget {
           style: TextStyle(
               fontSize: 16.0,
               fontFamily: "Montserrat",
-              height: 0.5,
+              height: 1.25,
               color: Colors.black),
           validator: validator,
           onSaved: onSaved,

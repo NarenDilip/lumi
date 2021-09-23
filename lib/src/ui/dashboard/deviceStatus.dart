@@ -5,8 +5,9 @@ import 'package:lumi/src/ui/login/components/rounded_button.dart';
 
 class deviceStatus extends StatefulWidget {
   final bool isSuccess;
+  final String deviceName;
 
-  deviceStatus({Key? key, required this.isSuccess}) : super(key: key);
+  deviceStatus({Key? key, required this.isSuccess , required this.deviceName}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,14 +18,15 @@ class deviceStatus extends StatefulWidget {
 class deviceStatusState extends State<deviceStatus> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: deviceStatusForm(isSuccess: widget.isSuccess));
+    return Scaffold(body: deviceStatusForm(isSuccess: widget.isSuccess, deviceName:widget.deviceName));
   }
 }
 
 class deviceStatusForm extends StatelessWidget {
   final bool isSuccess;
+  final String deviceName;
 
-  deviceStatusForm({Key? key, required this.isSuccess}) : super(key: key);
+  deviceStatusForm({Key? key, required this.isSuccess, required this.deviceName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class deviceStatusForm extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      Text(isSuccess?device_success_msg:device_fail_msg,
+                      Text(isSuccess?(device_toast_msg + deviceName + device_success_msg):( device_toast_msg + deviceName + device_fail_msg),
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,

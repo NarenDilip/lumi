@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lumi/src/constants/const.dart';
-import 'package:lumi/src/tb/service/tb_secure_storage.dart';
 import 'package:lumi/src/ui/dashboard/dashboard.dart';
-import 'package:lumi/src/utils/apppreference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../thingsboard_client.dart';
@@ -19,7 +17,6 @@ class splashScreen extends StatefulWidget {
 }
 
 class splashScreenState extends State<splashScreen> {
-  // late SharedPreferences logindata;
   late String token;
   late final TbStorage storage;
 
@@ -31,9 +28,6 @@ class splashScreenState extends State<splashScreen> {
 
   void initial() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // var logindata=  prefs.getString("token");
-    // logindata = await SharedPreferences.getInstance();
-    // storage = TbSecureStorage();
     try {
       token = prefs.getString("smart_token").toString();
       Timer(
@@ -56,8 +50,14 @@ class splashScreenState extends State<splashScreen> {
     return Container(
         height: size.height,
         width: double.infinity,
-        color: Colors.white,
+        // color: Colors.white,
         margin: new EdgeInsets.all(15.0),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/icons/background_img.jpeg"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
