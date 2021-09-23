@@ -27,35 +27,6 @@ class dashboardScreenState extends State<dashboardScreen> {
   }
 }
 
-// String result = "Hey there !";
-// Future _scanQR() async {
-//   result = "Hey there !";
-//   try {
-//     String qrResult = await BarcodeScanner.scan();
-//     setState(() {
-//       result = qrResult;
-//     });
-//   } on PlatformException catch (ex) {
-//     if (ex.code == BarcodeScanner.CameraAccessDenied) {
-//       setState(() {
-//         result = "Camera permission was denied";
-//       });
-//     } else {
-//       setState(() {
-//         result = "Unknown Error $ex";
-//       });
-//     }
-//   } on FormatException {
-//     setState(() {
-//       result = "You pressed the back button before scanning anything";
-//     });
-//   } catch (ex) {
-//     setState(() {
-//       result = "Unknown Error $ex";
-//     });
-//   }
-// }
-
 class dashboardForm extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _scanController = new TextEditingController(text: "");
@@ -75,45 +46,44 @@ class dashboardForm extends StatelessWidget {
                 Positioned(
                   top: 20,
                   child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 70,
+                      ),
+                      Image(
+                          image: AssetImage("assets/icons/logo.png"),
+                          height: 50,
+                          width: 50),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        splashscreen_text.toUpperCase(),
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: purpleColor,
+                            fontWeight: FontWeight.bold),
+                      )
+                    ],
                   ),
                 ),
                 Center(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 70,
-                        ),
-                        Image(
-                            image: AssetImage("assets/icons/logo.png"),
-                            height: 50,
-                            width: 50),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          splashscreen_text.toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 30,
-                              color: purpleColor,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                Center(
-                  child:Container(
-                    width: 180,
-                    height: 200,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Container(
+                  width: 180,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -124,17 +94,19 @@ class dashboardForm extends StatelessWidget {
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.0),
-                            child: Image.asset('assets/icons/qr.png',width: 160,height: 160,),
+                            child: Image.asset(
+                              'assets/icons/qr.png',
+                              width: 160,
+                              height: 160,
+                            ),
                           ),
                         ),
                       ),
-
                       Text(qr_text,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 22,
-                            fontWeight: FontWeight.bold
-                          )),
+                              fontWeight: FontWeight.bold)),
                     ],
                   ),
                 )),
@@ -143,75 +115,76 @@ class dashboardForm extends StatelessWidget {
   }
 }
 
-@override
-Future<Device?> fetchDeviceType(String deviceName, BuildContext context) async {
-  Utility.isConnected().then((value) async {
-    try {
-      Device response;
-      Future<List<EntityGroupInfo>> deviceResponse;
-      var tbClient = ThingsboardClient(serverUrl);
-      tbClient.smart_init();
-      response = (await tbClient.getDeviceService().getTenantDevice(deviceName))
-          as Device;
-      if (response.label!.isNotEmpty) {
-        print("Device present, Device Type-->" + response.type);
-        if (response.type == "ilmNode") {
-          deviceResponse = fetchDeviceGroups(
-              "Device", deviceName, response.type.toString(), context);
-        } else if (response.type == "") {
-        } else {}
-      } else {
-        print("Device not present,Try with another device");
-      }
-    } catch (e) {
-      var message = toThingsboardError(e).message;
-      if (message == "Session expired!") {
-        var status = loginThingsboard.callThingsboardLogin(context);
-        if (status == true) {
-          fetchDeviceType(deviceName, context);
-        }
-      }
-    }
-  });
-}
+// @override
+// Future<Device?> fetchDeviceType(String deviceName, BuildContext context) async {
+//   Utility.isConnected().then((value) async {
+//     try {
+//       Device response;
+//       Future<List<EntityGroupInfo>> deviceResponse;
+//       var tbClient = ThingsboardClient(serverUrl);
+//       tbClient.smart_init();
+//       response = (await tbClient.getDeviceService().getTenantDevice(deviceName))
+//           as Device;
+//       if (response.label!.isNotEmpty) {
+//         print("Device present, Device Type-->" + response.type);
+//         if (response.type == "ilmNode") {
+//           deviceResponse = fetchDeviceGroups(
+//               "Device", deviceName, response.type.toString(), context);
+//         } else if (response.type == "") {
+//         } else {}
+//       } else {
+//         print("Device not present,Try with another device");
+//       }
+//     } catch (e) {
+//       var message = toThingsboardError(e).message;
+//       if (message == "Session expired!") {
+//         var status = loginThingsboard.callThingsboardLogin(context);
+//         if (status == true) {
+//           fetchDeviceType(deviceName, context);
+//         }
+//       }
+//     }
+//   });
+// }
 
-@override
-Future<List<EntityGroupInfo>> fetchDeviceGroups(String groupType,
-    String deviceName, String deviceType, BuildContext context) async {
-  List<EntityGroupInfo> response;
-  response = null as List<EntityGroupInfo>;
-  Utility.isConnected().then((value) async {
-    try {
-      var tbClient = ThingsboardClient(serverUrl);
-      tbClient.smart_init();
-      var groupType = selectiondevice;
-      var entityVal = entityTypeFromString(groupType);
-      response = await tbClient
-          .getEntityGroupService()
-          .getEntityGroupsByType(entityVal);
-      for (int i = 0; i < response.length; i++) {
-        if (deviceType == "ilm") {
-          if (response[i].name == ilm_deviceRepair) {
-            var tbClient = ThingsboardClient(serverUrl);
-            tbClient.smart_init();
-            Future<Device?> entityFuture =
-                fetchDeviceDetails(deviceName, context);
-          }
-        }
-      }
-    } catch (e) {
-      var message = toThingsboardError(e).message;
-      if (message == "Session expired!") {
-        var status = loginThingsboard.callThingsboardLogin(context);
-        if (status == true) {
-          fetchDeviceType(deviceName, context);
-        }
-      }
-    }
-  });
-  return response;
-}
+// @override
+// Future<List<EntityGroupInfo>> fetchDeviceGroups(String groupType,
+//     String deviceName, String deviceType, BuildContext context) async {
+//   List<EntityGroupInfo> response;
+//   response = null as List<EntityGroupInfo>;
+//   Utility.isConnected().then((value) async {
+//     try {
+//       var tbClient = ThingsboardClient(serverUrl);
+//       tbClient.smart_init();
+//       var groupType = selectiondevice;
+//       var entityVal = entityTypeFromString(groupType);
+//       response = await tbClient
+//           .getEntityGroupService()
+//           .getEntityGroupsByType(entityVal);
+//       for (int i = 0; i < response.length; i++) {
+//         if (deviceType == "ilm") {
+//           if (response[i].name == ilm_deviceRepair) {
+//             var tbClient = ThingsboardClient(serverUrl);
+//             tbClient.smart_init();
+//             Future<Device?> entityFuture =
+//                 fetchDeviceDetails(deviceName, context);
+//           }
+//         }
+//       }
+//     } catch (e) {
+//       var message = toThingsboardError(e).message;
+//       if (message == "Session expired!") {
+//         var status = loginThingsboard.callThingsboardLogin(context);
+//         if (status == true) {
+//           fetchDeviceType(deviceName, context);
+//         }
+//       }
+//     }
+//   });
+//   return response;
+// }
 
+// Fetching the device details from smart server
 @override
 Future<Device?> fetchDeviceDetails(
     String deviceName, BuildContext context) async {
@@ -220,28 +193,34 @@ Future<Device?> fetchDeviceDetails(
       Device response;
       Future<List<EntityGroupInfo>> deviceResponse;
       var tbClient = ThingsboardClient(serverUrl);
-      tbClient.smart_init();
-      response = (await tbClient.getDeviceService().getTenantDevice(deviceName))
+      tbClient.prod_init();
+      response = await tbClient.getDeviceService().getTenantDevice(deviceName)
           as Device;
       if (response.name.isNotEmpty) {
-        var scannedDeviceCredentials = await tbClient
-            .getDeviceService()
-            .getDeviceCredentialsByDeviceId(response.id!.id!);
-
-        fetchProductionDeviceDetails(
-            response.name,
-            scannedDeviceCredentials!.credentialsId.toString(),
-            response.id!.id!.toString(),
-            context);
+        if (response.type == "ilmNode") {
+          fetchILMDeviceFolder(response.id!.id.toString(), deviceName, context);
+        } else if (response.type == "ccms") {
+          fetchCCMSDeviceFolder(
+              response.id!.id.toString(), deviceName, context);
+        } else if (response.type == "Gateway") {
+          fetchGatewayDeviceFoler(
+              response.id!.id.toString(), deviceName, context);
+        }
       } else {
         Fluttertoast.showToast(
-            msg: "Device Not Found",
+            msg: "Given Device " + deviceName + " Not Found",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.white,
-            textColor: Colors.blue,
+            textColor: Colors.black,
             fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
       }
     } catch (e) {
       var message = toThingsboardError(e).message;
@@ -252,15 +231,284 @@ Future<Device?> fetchDeviceDetails(
           fetchDeviceDetails(deviceName, context);
         }
       } else {
-        Navigator.pop(context);
         Fluttertoast.showToast(
             msg: "Device Not Found",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.white,
-            textColor: Colors.blue,
+            textColor: Colors.black,
             fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
+      }
+    }
+  });
+}
+
+void fetchGatewayDeviceFoler(
+    String deviceId, String deviceName, BuildContext context) {
+  Utility.isConnected().then((value) async {
+    try {
+      var tbClient = ThingsboardClient(serverUrl);
+      tbClient.prod_init();
+      var groupType = selectiondevice;
+      var deviceLength = 0;
+      var filteredDeviceDetails;
+      var entityVal = entityTypeFromString(groupType);
+      var response = await tbClient
+          .getEntityGroupService()
+          .getEntityGroupsByType(entityVal);
+      for (int i = 0; i < response.length; i++) {
+        if (response[i].name == gw_deviceRepair) {
+          var pageLink = PageLink(1, 0, deviceName);
+          filteredDeviceDetails = await tbClient
+              .getDeviceService()
+              .getDevicesByEntityGroupId(
+                  response[i].id!.id.toString(), pageLink);
+          deviceLength = filteredDeviceDetails.data.length;
+        }
+      }
+      if (deviceLength == 0) {
+        for (int i = 0; i < response.length; i++) {
+          if (response[i].name == gw_deviceReplace) {
+            var pageLink = PageLink(1, 0, deviceName);
+            var filteredDeviceDetails = await tbClient
+                .getDeviceService()
+                .getDevicesByEntityGroupId(
+                    response[i].id!.id.toString(), pageLink);
+            deviceLength = filteredDeviceDetails.data.length;
+          }
+        }
+      }
+
+      if (deviceLength == 0) {
+        Fluttertoast.showToast(
+            msg: " Given Device - " +
+                deviceName +
+                " Not found in forRepairILM and forReplaceILM Folders",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
+      } else {
+        var deviceCredentials = await tbClient
+            .getDeviceService()
+            .getDeviceCredentialsByDeviceId(deviceId);
+
+        var updateCredentials = deviceCredentials!.credentialsId.toString();
+
+        fetchProductionDeviceDetails(
+            deviceName, updateCredentials, deviceId, context);
+      }
+    } catch (e) {
+      var message = toThingsboardError(e).message;
+      if (message == "Session expired!") {
+        var status = loginThingsboard.callThingsboardLogin(context);
+        if (status == true) {
+          fetchDeviceDetails(deviceName, context);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: " Given Device - " + deviceName + " Not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
+      }
+    }
+  });
+}
+
+void fetchCCMSDeviceFolder(
+    String deviceId, String deviceName, BuildContext context) {
+  Utility.isConnected().then((value) async {
+    try {
+      var tbClient = ThingsboardClient(serverUrl);
+      tbClient.prod_init();
+      var groupType = selectiondevice;
+      var deviceLength = 0;
+      var filteredDeviceDetails;
+      var entityVal = entityTypeFromString(groupType);
+      var response = await tbClient
+          .getEntityGroupService()
+          .getEntityGroupsByType(entityVal);
+      for (int i = 0; i < response.length; i++) {
+        if (response[i].name == ccms_deviceRepair) {
+          var pageLink = PageLink(1, 0, deviceName);
+          filteredDeviceDetails = await tbClient
+              .getDeviceService()
+              .getDevicesByEntityGroupId(
+                  response[i].id!.id.toString(), pageLink);
+          deviceLength = filteredDeviceDetails.data.length;
+        }
+      }
+      if (deviceLength == 0) {
+        for (int i = 0; i < response.length; i++) {
+          if (response[i].name == ccms_deviceReplace) {
+            var pageLink = PageLink(1, 0, deviceName);
+            var filteredDeviceDetails = await tbClient
+                .getDeviceService()
+                .getDevicesByEntityGroupId(
+                    response[i].id!.id.toString(), pageLink);
+            deviceLength = filteredDeviceDetails.data.length;
+          }
+        }
+      }
+
+      if (deviceLength == 0) {
+        Fluttertoast.showToast(
+            msg: " Given Device - " +
+                deviceName +
+                " Not found in forRepairILM and forReplaceILM Folders",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
+      } else {
+        var deviceCredentials = await tbClient
+            .getDeviceService()
+            .getDeviceCredentialsByDeviceId(deviceId);
+
+        var updateCredentials = deviceCredentials!.credentialsId.toString();
+
+        fetchProductionDeviceDetails(
+            deviceName, updateCredentials, deviceId, context);
+      }
+    } catch (e) {
+      var message = toThingsboardError(e).message;
+      if (message == "Session expired!") {
+        var status = loginThingsboard.callThingsboardLogin(context);
+        if (status == true) {
+          fetchDeviceDetails(deviceName, context);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: " Given Device - " + deviceName + " Device Not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
+      }
+    }
+  });
+}
+
+Future<void> fetchILMDeviceFolder(
+    String deviceId, String deviceName, BuildContext context) async {
+  Utility.isConnected().then((value) async {
+    try {
+      var tbClient = ThingsboardClient(serverUrl);
+      tbClient.prod_init();
+      var groupType = selectiondevice;
+      var deviceLength = 0;
+      var filteredDeviceDetails;
+      var entityVal = entityTypeFromString(groupType);
+      var response = await tbClient
+          .getEntityGroupService()
+          .getEntityGroupsByType(entityVal);
+      for (int i = 0; i < response.length; i++) {
+        if (response[i].name == ilm_deviceRepair) {
+          var pageLink = PageLink(1, 0, deviceName);
+          filteredDeviceDetails = await tbClient
+              .getDeviceService()
+              .getDevicesByEntityGroupId(
+                  response[i].id!.id.toString(), pageLink);
+          deviceLength = filteredDeviceDetails.data.length;
+        }
+      }
+      if (deviceLength == 0) {
+        for (int i = 0; i < response.length; i++) {
+          if (response[i].name == ilm_deviceReplace) {
+            var pageLink = PageLink(1, 0, deviceName);
+            var filteredDeviceDetails = await tbClient
+                .getDeviceService()
+                .getDevicesByEntityGroupId(
+                    response[i].id!.id.toString(), pageLink);
+            deviceLength = filteredDeviceDetails.data.length;
+          }
+        }
+      }
+
+      if (deviceLength == 0) {
+        Fluttertoast.showToast(
+            msg: " Given Device - " +
+                deviceName +
+                " Not found in forRepairILM and forReplaceILM Folders",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+      } else {
+        var deviceCredentials = await tbClient
+            .getDeviceService()
+            .getDeviceCredentialsByDeviceId(deviceId);
+
+        var updateCredentials = deviceCredentials!.credentialsId.toString();
+
+        fetchProductionDeviceDetails(
+            deviceName, updateCredentials, deviceId, context);
+      }
+    } catch (e) {
+      var message = toThingsboardError(e).message;
+      if (message == "Session expired!") {
+        var status = loginThingsboard.callThingsboardLogin(context);
+        if (status == true) {
+          fetchDeviceDetails(deviceName, context);
+        }
+      } else {
+        Fluttertoast.showToast(
+            msg: " Given Device - " + deviceName + " Not Found",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
       }
     }
   });
@@ -274,7 +522,7 @@ Future<Device?> fetchProductionDeviceDetails(String deviceName,
       Device response;
       Future<List<EntityGroupInfo>> deviceResponse;
       var tbClient = ThingsboardClient(serverUrl);
-      tbClient.prod_init();
+      tbClient.smart_init();
       response = (await tbClient.getDeviceService().getTenantDevice(deviceName))
           as Device;
 
@@ -284,15 +532,13 @@ Future<Device?> fetchProductionDeviceDetails(String deviceName,
 
       getCredentials!.credentialsId = credentials;
 
+      var tbClient1 = ThingsboardClient(serverUrl);
+      tbClient1.prod_init();
+      await tbClient1.getDeviceService().deleteDevice(deviceid);
+
       var savedCredentials = await tbClient
           .getDeviceService()
           .saveDeviceCredentials(getCredentials);
-
-      var tbClient1 = ThingsboardClient(serverUrl);
-      tbClient1.smart_init();
-      await tbClient.getDeviceService().deleteDevice(deviceid);
-
-      Navigator.pop(context);
 
       Fluttertoast.showToast(
           msg: "Device Updated Sucessfully",
@@ -300,13 +546,14 @@ Future<Device?> fetchProductionDeviceDetails(String deviceName,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.white,
-          textColor: Colors.blue,
+          textColor: Colors.black,
           fontSize: 16.0);
 
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-        return deviceStatus();
-      }));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => deviceStatus(text: 'Hello'),
+          ));
     } catch (e) {
       var message = toThingsboardError(e).message;
       if (message == "Session expired!") {
@@ -315,51 +562,61 @@ Future<Device?> fetchProductionDeviceDetails(String deviceName,
           fetchDeviceDetails(deviceName, context);
         }
       } else {
-        Navigator.pop(context);
         Fluttertoast.showToast(
-            msg: "Device Not Found",
+            msg: " Given Device - " + deviceName + " Not Found",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.white,
-            textColor: Colors.blue,
+            textColor: Colors.black,
             fontSize: 16.0);
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => deviceStatus(text: 'Hello'),
+            ));
+
+        // Navigator.of(context)
+        //     .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => {
+        //   return deviceStatus(text: 'Hello');
+        // }));
       }
     }
   });
 }
 
-@override
-Future<List<EntityGroupInfo>> fetchProdDeviceGroups(String s, String deviceName,
-    String deviceType, BuildContext context) async {
-  List<EntityGroupInfo> response;
-  response = null as List<EntityGroupInfo>;
-  Utility.isConnected().then((value) async {
-    try {
-      var tbClient = ThingsboardClient(serverUrl);
-      tbClient.prod_init();
-      var groupType = selectiondevice;
-      var entityVal = entityTypeFromString(groupType);
-      response = await tbClient
-          .getEntityGroupService()
-          .getEntityGroupsByType(entityVal);
-      for (int i = 0; i < response.length; i++) {
-        if (deviceType == ilm_deviceType) {
-          if (response[i].name == "forRepairILM") {}
-        }
-      }
-    } catch (e) {
-      var message = toThingsboardError(e).message;
-      if (message == "Session expired!") {
-        var status = loginThingsboard.callThingsboardLogin(context);
-        if (status == true) {
-          fetchDeviceType(deviceName, context);
-        }
-      } else {}
-    }
-  });
-  return response;
-}
+// @override
+// Future<List<EntityGroupInfo>> fetchProdDeviceGroups(String s, String deviceName,
+//     String deviceType, BuildContext context) async {
+//   List<EntityGroupInfo> response;
+//   response = null as List<EntityGroupInfo>;
+//   Utility.isConnected().then((value) async {
+//     try {
+//       var tbClient = ThingsboardClient(serverUrl);
+//       tbClient.prod_init();
+//       var groupType = selectiondevice;
+//       var entityVal = entityTypeFromString(groupType);
+//       response = await tbClient
+//           .getEntityGroupService()
+//           .getEntityGroupsByType(entityVal);
+//       for (int i = 0; i < response.length; i++) {
+//         if (deviceType == ilm_deviceType) {
+//           if (response[i].name == "forRepairILM") {}
+//         }
+//       }
+//     } catch (e) {
+//       var message = toThingsboardError(e).message;
+//       if (message == "Session expired!") {
+//         var status = loginThingsboard.callThingsboardLogin(context);
+//         if (status == true) {
+//           fetchDeviceDetails(value, context);
+//         }
+//       } else {}
+//     }
+//   });
+//   return response;
+// }
 
 void deviceFetcher(BuildContext context) {
   late Future<Device?> entityFuture;
@@ -368,10 +625,21 @@ void deviceFetcher(BuildContext context) {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (BuildContext context) => QRScreen()),
-          (route) => true).then((value) {
+          (route) => true).then((value) async {
         if (value != null) {
+          // if (value.toString().length == 6) {
           Utility.progressDialog(context);
           entityFuture = fetchDeviceDetails(value, context);
+          // } else {
+          //   Fluttertoast.showToast(
+          //       msg: "Invalid Device",
+          //       toastLength: Toast.LENGTH_SHORT,
+          //       gravity: ToastGravity.BOTTOM,
+          //       timeInSecForIosWeb: 1,
+          //       backgroundColor: Colors.white,
+          //       textColor: Colors.blue,
+          //       fontSize: 16.0);
+          // }
         }
       });
     }

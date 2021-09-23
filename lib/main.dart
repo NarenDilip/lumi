@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lumi/src/tb/model/dashboard_models.dart';
-import 'package:lumi/src/ui/login/login_screen.dart';
 import 'package:lumi/src/ui/splashScreen.dart';
 
 void main() {

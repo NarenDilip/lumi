@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lumi/src/utils/responsive.dart';
 
 class Utility {
@@ -10,6 +11,14 @@ class Utility {
     } else if (connectivityResult == ConnectivityResult.wifi) {
       return true;
     }
+    Fluttertoast.showToast(
+        msg: "Please check your Mobile Internet Connectivity",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.white,
+        textColor: Colors.blue,
+        fontSize: 16.0);
     return false;
   }
 

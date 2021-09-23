@@ -5,6 +5,10 @@ import 'package:lumi/src/constants/const.dart';
 import 'dashboard.dart';
 
 class deviceStatus extends StatefulWidget {
+
+  final String text;
+  deviceStatus({Key? key, required this.text}) : super(key: key);
+  
   @override
   State<StatefulWidget> createState() {
     return deviceStatusState();
@@ -14,11 +18,13 @@ class deviceStatus extends StatefulWidget {
 class deviceStatusState extends State<deviceStatus> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: deviceStatusForm());
+    return Scaffold(body: deviceStatusForm(widget.text));
   }
 }
 
 class deviceStatusForm extends StatelessWidget {
+   deviceStatusForm(String text);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -35,7 +41,6 @@ class deviceStatusForm extends StatelessWidget {
               child: Container(
                 height: 100,
                 width: double.infinity,
-
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
