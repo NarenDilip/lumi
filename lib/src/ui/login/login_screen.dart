@@ -49,6 +49,12 @@ class LoginForm extends StatelessWidget {
       child: Container(
           height: size.height,
           width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/icons/background_img.jpeg"),
+              fit: BoxFit.cover,
+            ),
+          ),
           child: Form(
               key: _formKey,
               child: Column(

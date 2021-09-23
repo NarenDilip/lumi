@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lumi/src/constants/const.dart';
-
-import 'dashboard.dart';
+import 'package:lumi/src/ui/login/components/rounded_button.dart';
 
 class deviceStatus extends StatefulWidget {
+  final bool isSuccess;
 
-  final String text;
-  deviceStatus({Key? key, required this.text}) : super(key: key);
-  
+  deviceStatus({Key? key, required this.isSuccess}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return deviceStatusState();
@@ -18,55 +17,90 @@ class deviceStatus extends StatefulWidget {
 class deviceStatusState extends State<deviceStatus> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: deviceStatusForm(widget.text));
+    return Scaffold(body: deviceStatusForm(isSuccess: widget.isSuccess));
   }
 }
 
 class deviceStatusForm extends StatelessWidget {
-   deviceStatusForm(String text);
+  final bool isSuccess;
+
+  deviceStatusForm({Key? key, required this.isSuccess}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Material(
-        type: MaterialType.transparency,
-        child: new Container(
-            height: size.height,
-            width: double.infinity,
-            color: Colors.white,
-            margin: new EdgeInsets.all(0.0),
-            child: Card(
-                child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Container(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image(
-                          image: AssetImage("assets/icons/logo.png"),
-                          height: 50,
-                          width: 50),
+    return Scaffold(
+      body: new Container(
+          height: size.height,
+          width: size.width,
+          margin: new EdgeInsets.all(0.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/icons/background_img.jpeg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: SizedBox(
+                  height: 200,
+                  width: size.width - 20,
+                  child: Card(
+                    elevation: 8,
+                    child: Column(children: <Widget>[
                       SizedBox(
-                        height: 20,
+                        height: 5,
                       ),
-                      Text(splashscreen_text,
+                      Container(
+                        height: 40,
+                        width: 40,
+                        child: Icon(
+                          isSuccess?Icons.done:Icons.clear,
+                          color: Colors.white,
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isSuccess?btnLightGreenColor:Colors.red,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(isSuccess?device_success_msg:device_fail_msg,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
-                              fontFamily: "Montserrat")),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text("Device Moved in to Production Successfully",
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 20,
                               fontFamily: "Montserrat"),
                           textAlign: TextAlign.center),
+                      Spacer(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Done",
+                            style: TextStyle(
+                                color: successGreenColor, fontSize: 16),
+                          ),
+                        ),
+                      )
                     ]),
+                  ),
+                ),
               ),
-            ))));
+              SizedBox(
+                height: 10,
+              ),
+              /*RoundedButton(
+                text: "SMART FOR REPAIR",
+                color: btnLightGreenColor,
+                press: () {
+
+                },
+                key: null,
+              )*/
+            ],
+          )),
+    );
   }
 }

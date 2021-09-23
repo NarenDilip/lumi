@@ -10,6 +10,8 @@ const invListBackgroundColor = Color(0xff383838);
 const purpleColor = Color(0xff693e9e);
 const borderColor = Color(0xffd5d5d5);
 const dashboardThemeColor = Color(0xffc2cbf7);
+const successGreenColor = Color(0xff16e38a);
+const btnLightGreenColor = Color(0xff35ba80);
 //
 
 const splashscreen_text = "Lumi";
@@ -29,4 +31,6 @@ const gw_deviceRepair = "forRepairGateway";
 const gw_deviceReplace = "forReplaceGateway";
 const sign_in = "SIGN IN";
 const qr_text = "SCAN QR CODE";
+const device_success_msg = "Device Moved in to Production Successfully";
+const device_fail_msg = "Device fail to move";
 

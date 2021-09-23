@@ -90,7 +90,8 @@ class dashboardForm extends StatelessWidget {
                       Material(
                         child: InkWell(
                           onTap: () {
-                            deviceFetcher(context);
+                            //  deviceFetcher(context);
+                            nextPage(false,context);
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20.0),
@@ -216,11 +217,7 @@ Future<Device?> fetchDeviceDetails(
             textColor: Colors.black,
             fontSize: 16.0);
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true, context);
       }
     } catch (e) {
       var message = toThingsboardError(e).message;
@@ -240,11 +237,7 @@ Future<Device?> fetchDeviceDetails(
             textColor: Colors.black,
             fontSize: 16.0);
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true, context);
       }
     }
   });
@@ -298,11 +291,7 @@ void fetchGatewayDeviceFoler(
             textColor: Colors.black,
             fontSize: 16.0);
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+       nextPage(true, context);
       } else {
         var deviceCredentials = await tbClient
             .getDeviceService()
@@ -330,11 +319,7 @@ void fetchGatewayDeviceFoler(
             textColor: Colors.black,
             fontSize: 16.0);
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true, context);
       }
     }
   });
@@ -387,12 +372,7 @@ void fetchCCMSDeviceFolder(
             backgroundColor: Colors.white,
             textColor: Colors.black,
             fontSize: 16.0);
-
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true,context);
       } else {
         var deviceCredentials = await tbClient
             .getDeviceService()
@@ -419,15 +399,18 @@ void fetchCCMSDeviceFolder(
             backgroundColor: Colors.white,
             textColor: Colors.black,
             fontSize: 16.0);
-
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true, context);
       }
     }
   });
+}
+
+void nextPage(bool isSuccess, BuildContext context) {
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => deviceStatus(isSuccess: isSuccess),
+      ));
 }
 
 Future<void> fetchILMDeviceFolder(
@@ -504,11 +487,7 @@ Future<void> fetchILMDeviceFolder(
             textColor: Colors.black,
             fontSize: 16.0);
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true, context);
       }
     }
   });
@@ -549,11 +528,7 @@ Future<Device?> fetchProductionDeviceDetails(String deviceName,
           textColor: Colors.black,
           fontSize: 16.0);
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => deviceStatus(text: 'Hello'),
-          ));
+      nextPage(true, context);
     } catch (e) {
       var message = toThingsboardError(e).message;
       if (message == "Session expired!") {
@@ -571,11 +546,7 @@ Future<Device?> fetchProductionDeviceDetails(String deviceName,
             textColor: Colors.black,
             fontSize: 16.0);
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => deviceStatus(text: 'Hello'),
-            ));
+        nextPage(true, context);
 
         // Navigator.of(context)
         //     .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => {
