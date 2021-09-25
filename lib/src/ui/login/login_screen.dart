@@ -40,7 +40,6 @@ class LoginForm extends StatelessWidget {
       new TextEditingController(text: "");
   TextEditingController _emailController = new TextEditingController(text: "");
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
